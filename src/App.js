@@ -11,12 +11,15 @@ function Square({value, onSquareClick}){
 
 export default function Board() {
   const [squares,setSquares] = useState(Array(9).fill(null));
+  const [xIsNext, setXIsNext] = useState(true);
 
   function handleClick(i){
     console.log('squares : ',squares)
     const nextSquares = squares.slice(); // 얕은 복사임, slice(시작인덱스, 개수? 끝나는인덱스+1) 인수없으면 전체복사.
     console.log('nextSquares : ',nextSquares)
-    nextSquares[i] = "X";
+    let OX = (xIsNext) ? "X" : "O";
+    nextSquares[i] = OX;
+    setXIsNext(!xIsNext);
     setSquares(nextSquares);
     console.log(squares)
   }
