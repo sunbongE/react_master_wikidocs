@@ -22,7 +22,6 @@ function calculateWinner(squares){
 }
 
 function Square({value, onSquareClick}){
-
   return (
     <button className="square" onClick={onSquareClick}>
       {value}
@@ -30,25 +29,20 @@ function Square({value, onSquareClick}){
   );
 }
 
-export default function Board() {
-  const [squares,setSquares] = useState(Array(9).fill(null));
-  const [xIsNext, setXIsNext] = useState(true);
-
+function Board({xIsNext, squares, onPlay}) {
   function handleClick(i){
     if(squares[i] || calculateWinner(squares)){
       return;
     }
-
-    const nextSquares = squares.slice(); // 얕은 복사임, slice(시작인덱스, 개수? 끝나는인덱스+1) 인수없으면 전체복사.
+    
+    const nextSquares = squares.slice();
     let OX = (xIsNext) ? "X" : "O";
 
     // if (nextSquares[i] != null) return;
     if (nextSquares[i]) return; // 값이 존재하면
     nextSquares[i] = OX;
-
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
-  
+    
+    onPlay(nextSquares);
   }
 
     const winner = calculateWinner(squares);
@@ -77,5 +71,28 @@ export default function Board() {
         <Square value={squares[8]} onSquareClick={()=> handleClick(8)} />
       </div>
     </>
+  );
+}
+
+export default function Game(){
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history,setHistory] = useState([Array(9).fill(null)]);
+  const currentSquares = history[history.length-1];
+  
+  function handlePlay(nextSquares){
+    setHistory([...history, nextSquares]); // ...history : history의 모든 항목을 열거한다는 의미. 다음 2번째 매개변수 추가함.
+    setXIsNext(!xIsNext);
+    
+  }
+
+  return(
+    <div className="game">
+      <div className="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      <div className="game-info">
+        <ol> </ol>
+      </div>
+    </div>
   );
 }
