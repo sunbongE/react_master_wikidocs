@@ -75,23 +75,24 @@ function Board({xIsNext, squares, onPlay}) {
 }
 
 export default function Game(){
-  const [xIsNext, setXIsNext] = useState(true);
+  // const [xIsNext, setXIsNext] = useState(true);
   const [history,setHistory] = useState([Array(9).fill(null)]);
   const [currentVersion, setCurrentVersion] = useState(0); // 사용자가 보고있는 버전 관리.
   
   const currentSquares = history[currentVersion];
-  
+  const xIsNext = currentVersion%2 === 0;
+
   function handlePlay(nextSquares){
     const nextHistory = [...history.slice(0,currentVersion+1), nextSquares];
     setHistory(nextHistory); 
     setCurrentVersion(nextHistory.length-1);
-    setXIsNext(!xIsNext);
+    // setXIsNext(!xIsNext);
     
   }
 
   function jumpTo(nextVersion){
     setCurrentVersion(nextVersion);
-    setXIsNext(nextVersion%2===0);
+    // setXIsNext(nextVersion%2===0);
   }
 
   const versiones = history.map((squares, version) => {
