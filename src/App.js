@@ -77,13 +77,40 @@ function Board({xIsNext, squares, onPlay}) {
 export default function Game(){
   const [xIsNext, setXIsNext] = useState(true);
   const [history,setHistory] = useState([Array(9).fill(null)]);
-  const currentSquares = history[history.length-1];
+  const [currentVersion, setCurrentVersion] = useState(0); // 사용자가 보고있는 버전 관리.
+  
+  const currentSquares = history[currentVersion];
   
   function handlePlay(nextSquares){
-    setHistory([...history, nextSquares]); // ...history : history의 모든 항목을 열거한다는 의미. 다음 2번째 매개변수 추가함.
+    const nextHistory = [...history.slice(0,currentVersion+1), nextSquares];
+    setHistory(nextHistory); 
+    setCurrentVersion(nextHistory.length-1);
     setXIsNext(!xIsNext);
     
   }
+
+  function jumpTo(nextVersion){
+    setCurrentVersion(nextVersion);
+    setXIsNext(nextVersion%2===0);
+  }
+
+  const versiones = history.map((squares, version) => {
+    let description;
+
+    if(version>0){
+      description = '이동 #'+version+'로 가기';
+    }else{
+      description = '게임 시작으로 가기';
+    }
+    return (
+      <li key={version}>
+        <button onClick={()=> jumpTo(version)}>{description}</button>
+      </li>
+    );
+
+  })
+
+  console.log(history)
 
   return(
     <div className="game">
@@ -91,7 +118,7 @@ export default function Game(){
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <ol> </ol>
+        <ol>{versiones} </ol>
       </div>
     </div>
   );
