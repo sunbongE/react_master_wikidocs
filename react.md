@@ -63,6 +63,55 @@ function increment() {
 <details>
 <summary>useImmer을 사용한 객체 업데이트</summary>
 https://github.com/immerjs/use-immer
+
+설치 : `npm install immer use-immer`
+사용 : `import {useImmer} from use-immer`
+
+useState으로 객체를 업데이트할 때, 변경되기 전 객체를 복사해서 새로운 객체를 만들고, 덮어씌우는 형식으로 객체를 업데이트한다.
+이 과정에서 코드가 길어지고 코드 가독성 저하로 이어진다.
+이런 문제를 어느정도 해결할 수 있는 것이 useImmer이라고 생각하면 된다.
+사용하든 안하든 자유다.
+
+코드로 보는 차이
+
+```js
+const initialList = [
+  { id: 0, title: "Big Bellies", seen: false },
+  { id: 1, title: "Lunar Landscape", seen: false },
+  { id: 2, title: "Terracotta Army", seen: true },
+];
+```
+
+### useState 사용해서 배열에 있는 값 수정
+
+```js
+const [list, setList] = useState(initalList);
+
+function handleToggle(id, nextSeen) {
+  setList(
+    list.map((obj) => {
+      if (obj.id === id) {
+        return { ...obj, seen: nextSeen };
+      } else {
+        return obj;
+      }
+    })
+  );
+}
+```
+
+### useImmer 사용해서 배열에 있는 값 수정
+
+```js
+const [list, updateList] = useImmer(initalList);
+function handleToggle(id, nextSeen) {
+  updateList((draft) => {
+    const target = draft.find((a) => a.id === id);
+    target.seen = nextSeen;
+  });
+}
+```
+
 </details>
 
 ---
