@@ -60,6 +60,11 @@ function increment() {
 
 </details>
 
+<details>
+<summary>useImmer을 사용한 객체 업데이트</summary>
+https://github.com/immerjs/use-immer
+</details>
+
 ---
 
 <!-- 토글 템플릿 -->
