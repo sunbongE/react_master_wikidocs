@@ -60,6 +60,8 @@ function increment() {
 
 </details>
 
+---
+
 <details>
 <summary>useImmer을 사용한 객체 업데이트</summary>
 https://github.com/immerjs/use-immer
@@ -115,6 +117,130 @@ function handleToggle(id, nextSeen) {
 </details>
 
 ---
+
+<details>
+<summary>useState, useRef</summary>
+## useState와 useRef 차이
+
+**useState**
+
+- props 혹은 state의 값이 변경되었을 경우 컴포넌트가 리렌더링됩니다.
+
+```JS
+const [count, setCount] = useState(0);
+setCount(1); // → 컴포넌트 리렌더링
+```
+
+**useRef**
+
+- 값이 변경돼도 컴포넌트는 리렌더링되지 않음
+- 내부적으로 값이 바뀌지만, 화면은 그대로
+- 주요 DOM 요소 참조나, 리렌더링 없이 값 유지할 때, 사용.
+
+```JS
+const myRef = useRef(0);
+myRef.current = 100; // → 렌더링 안 됨!
+```
+
+## </details>
+
+<details>
+<summary>useEffect</summary>
+
+> 컴포넌트가 렌더링된 뒤에 특정 작업(부수 효과, 사이드 이펙트)을 수행하게 해주는 훅(Hook) <br/>
+> 대표적으로 데이터 가져오기, 이벤트 등록, 타이머, 외부 API 사용 등이 여기에 해당됨.
+
+**동작**
+
+- 컴포넌트가 렌더링된 후에 실행됨.
+- 의존성 배열([])에 따라 언제 실행될지 달라짐.
+  - [] : 마운트 시 한 번만
+  - [state] : 해당 state가 바뀔 때마다
+  - 없으면 : 리렌더링될 때마다
+- useEffect에서 함수를 리턴하면 그 함수는
+  언마운트(사라질 때)나 의존성 변경 전에 자동으로 실행됨.
+  이걸 클린업 함수라고 함.
+
+```JS
+useEffect(() => {
+  // effect 코드 실행
+
+  return () => {
+    // 이 함수가 바로 clean-up 함수! (리턴된 함수)
+  };
+}, [의존성 배열 : 어떤 값이 변할 때마다 실행할지 결정]); // [] : 빈배열은 처음 렌더링될때 1번 실행.
+
+```
+
+</details>
+
+---
+
+<details>
+<summary>prop과 {}중괄호  </summary>
+리액트는 일방향으로 부모 컴포넌트에서 자식 컴포넌트로 데이터(변수, 객체, 함수 등 )가 흐름으로써,
+자식 컴포넌트가 부모컴포넌트에게 변화를 알리거나, 부모에 정의된 함수를 사용할 수 있는 구조란걸 이제 알았다.
+
+근데 부모에서 자식으로 넘긴 prop을 자식에서 받아서 사용할때, 헷갈리는 부분이 있다.
+
+**부모 컴포넌트**
+
+```js
+import SearchButton from "./SearchButton.js";
+import SearchInput from "./SearchInput.js";
+import { useRef } from "react";
+export default function Page() {
+  const ref = useRef(null);
+  function clickHandle() {
+    ref.current.focus();
+  }
+  return (
+    <>
+      <nav>
+        <SearchButton onClick={clickHandle} />
+      </nav>
+      <SearchInput ref={ref} />
+    </>
+  );
+}
+```
+
+**자식 컴포넌트**
+
+```js
+export default function SearchButton(onClick) {
+  return (
+    <button onClick={onClick.onClick}>
+      Search
+    </button>
+  );
+}
+// 혹은
+export default function SearchButton({onClick}) {
+  return (
+    <button onClick={onClick}>
+      Search
+    </button>
+  );
+}
+```
+
+바로 중괄호를 사용하고 안하고 차이.
+중괄호 사용 안하고 `onClick`이란 이름으로 prop을 받은 경우
+`onClick = {onClick}` 으로 사용하면, error가 발생한다.
+<br/>
+` Expected \``onClick\`` listener to be a function, instead got a value of\``object\`` type.  `
+<br/>
+이유는 `onClick` 이란 이름으로 prop을 받으면 `onClick:onClick`으로 객체로 받은 것이고, 객체를 실행하려 했기 때문에
+에러가 발생한 것이다.
+그래서 사용하고 싶으면 `onClick.onClick`으로 사용할 수 있다.
+이런 사용법에서 불편함이 있고, 바로 꺼내서 사용할 수 있게하는 것이 바로 {} 이다.
+<br/>
+이렇게 바로 사용하기 위해 `{prop}` 형태로 받는 것을 **props를 구조 분해 할당** 해서 받는다고 한다.
+그래서 구조 분해 할당으로 받으면, `onClick = {onClick.onClick}` → `onClick = {onClick}` 으로 사용할 수 있다는 것!
+아~ 편하다~
+
+## </details>
 
 <!-- 토글 템플릿 -->
 <details>

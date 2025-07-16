@@ -8,6 +8,7 @@ import RenderTest from "./RenderTest";
 import AutoFocus from "./AutoFocus";
 import UpdateObjUseImmer from "./UpdateObjUseImmer";
 import UpdateObjUseState from "./UpdateObjUseState";
+import UseEffectPractice from "./UseEffectPractice";
 const root = createRoot(document.getElementById("root"));
 root.render(
   <StrictMode>
@@ -23,5 +24,7 @@ root.render(
     <UpdateObjUseState></UpdateObjUseState>
     <h1>useImmer으로 객체 업데이트</h1>
     <UpdateObjUseImmer></UpdateObjUseImmer>
+    <hr/>
+    <UseEffectPractice></UseEffectPractice>
   </StrictMode>
 );
