@@ -172,6 +172,18 @@ useEffect(() => {
 
 ```
 
+# 사용 주의사항
+
+useEffect함수는 렌더링 이후에 실행되니 때문에 아래와 같은 코드는 무한 루프가 발생한다.
+(State 변경되면, 렌더링발생하기때문~)
+
+```js
+const [cnt, setCnt] = useState(0);
+useEffect(() => {
+  setCnt(cnt + 1);
+});
+```
+
 </details>
 
 ---
